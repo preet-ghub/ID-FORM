@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ID Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form id="myForm">
+    
+    <header><h1>ID CARD FORM</h1>
+        <h3><i>session : 2025-2026</i></h3>
+    </header>
+    <main>
+        <div>
+            Name : <input type="text" name="name" placeholder="Your name" required>
+            <br><br>
+            Father's Name : <input type="text" name="fatherName" placeholder="Your Father's Name" required>
+            <br><br>
+            Mother's Name : <input type="text" name="motherName" placeholder="Your Mother's Name" required>
+            <br><br>
+            Phone Number : <input type="tel" name="phone" placeholder="Your Phone no"  oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            <br><br>
+            Guardian Number : <input type="tel" name="guardianPhone" placeholder="Your Guardian no" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            <br><br>
+            Class Name : <input type="text" name="admissionNo" placeholder="Your Class" required>
+            <br><br>
+            Roll Number : <input type="text" name="rollNo" placeholder="Your Roll no" required>
+            <br><br>
+            Section : <input type="text" name="section" placeholder="Your Section" maxlength="1" required>
+            <br><br>
+            Email : <input type="email" name="email" placeholder="Your Email" >
+            <br><br>
+             Date Of Birth : <input type="date" name="dob" required>
+             <br><br>
+             Address :<br>
+             <textarea name="address" rows="5" cols="26"></textarea>
+             <br><br>
+             Upload Your Photo : <input type="file" id="photo" name="photoLink" accept="image/*" >
+             <br>
+             
+             <button type="submit">Submit</button>
+        </div>
+    </main>
+
+    
+  </form>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyWVE_idmF4chldADNYPaXZ1kev7vdtdtVEmeoVdvl2T1TpSmuw8dPHdOwrb_pQP-MMTw/exec"; // from Apps Script
+    
+    document.getElementById('myForm').addEventListener('submit', e => {
+      e.preventDefault();
+    
+      const form = e.target;
+      const formData = new FormData(form);
+    
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(() => {
+          alert('Thank you for filling out your information!');
+          form.reset(); 
+        })
+        .catch(err => console.error(err));
+    });
+  </script>
+  
+    
+</body>
+</html>
