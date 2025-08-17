@@ -6,32 +6,33 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form id="myForm">
+  <form id="myForm" enctype="multipart/form-data" method="post">
+    
     
     <header><h1>ID CARD FORM</h1>
         <h3><i>session : 2025-2026</i></h3>
     </header>
     <main>
         <div>
-            Name : <input type="text" name="name" placeholder="Your name" required>
+            Name : <input type="text" name="name" placeholder="Your name" >
             <br><br>
-            Father's Name : <input type="text" name="fatherName" placeholder="Your Father's Name" required>
+            Father's Name : <input type="text" name="fatherName" placeholder="Your Father's Name" >
             <br><br>
-            Mother's Name : <input type="text" name="motherName" placeholder="Your Mother's Name" required>
+            Mother's Name : <input type="text" name="motherName" placeholder="Your Mother's Name" >
             <br><br>
             Phone Number : <input type="tel" name="phone" placeholder="Your Phone no"  oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             <br><br>
             Guardian Number : <input type="tel" name="guardianPhone" placeholder="Your Guardian no" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             <br><br>
-            Class Name : <input type="text" name="admissionNo" placeholder="Your Class" required>
+            Class Name : <input type="text" name="admissionNo" placeholder="Your Class" >
             <br><br>
-            Roll Number : <input type="text" name="rollNo" placeholder="Your Roll no" required>
+            Roll Number : <input type="text" name="rollNo" placeholder="Your Roll no" >
             <br><br>
-            Section : <input type="text" name="section" placeholder="Your Section" maxlength="1" required>
+            Section : <input type="text" name="section" placeholder="Your Section" maxlength="1" >
             <br><br>
             Email : <input type="email" name="email" placeholder="Your Email" >
             <br><br>
-             Date Of Birth : <input type="date" name="dob" required>
+             Date Of Birth : <input type="date" name="dob" >
              <br><br>
              Address :<br>
              <textarea name="address" rows="5" cols="26"></textarea>
@@ -47,20 +48,34 @@
   </form>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyWVE_idmF4chldADNYPaXZ1kev7vdtdtVEmeoVdvl2T1TpSmuw8dPHdOwrb_pQP-MMTw/exec"; // from Apps Script
-    
-    document.getElementById('myForm').addEventListener('submit', e => {
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyw8Y31kow-3s3_8PUNhg5S2lr9g8vnAJ3D3un9VY8rCvg8a2-FKrMtDZLVa9paOQuSuQ/exec";
+  
+    document.getElementById('myForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-    
       const form = e.target;
       const formData = new FormData(form);
-    
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(() => {
-          alert('Thank you for filling out your information!');
-          form.reset(); 
-        })
-        .catch(err => console.error(err));
+  
+      // Handle photo as base64
+      const fileInput = document.getElementById("photo");
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onloadend = async function () {
+          const base64String = reader.result.split(",")[1];
+          formData.set("photoLink", base64String); // replace file with base64
+  
+          // Send to Google Apps Script
+          await fetch(scriptURL, { method: "POST", body: formData });
+          alert("Thank you for filling out your information!");
+          form.reset();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // No photo uploaded, just send the text fields
+        await fetch(scriptURL, { method: "POST", body: formData });
+        alert("Thank you for filling out your information!");
+        form.reset();
+      }
     });
   </script>
   
