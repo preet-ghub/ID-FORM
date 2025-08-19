@@ -77,5 +77,12 @@
     <p>Your information has been successfully submitted.</p>
     <p>We truly appreciate your response 💙</p>
   </div>
+
+  <script>
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+    history.go(1);
+  };
+</script>
 </body>
 </html>
