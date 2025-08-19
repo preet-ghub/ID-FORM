@@ -57,7 +57,7 @@
       const form = e.target;
       const fd = new FormData(form);
   
-      // ✅ Format DOB (YYYY-MM-DD → DD-MM-YYYY)
+     
       const dob = fd.get("dob");
       if (dob) {
         const [year, month, day] = dob.split("-");
@@ -65,20 +65,20 @@
         fd.set("dob", formattedDOB);
       }
   
-      // Convert selected photo to base64 and send that instead of the raw file
+     
       const fileInput = document.getElementById('photo');
       if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const base64 = await fileToBase64(file);       
         const clean = base64.split(',')[1] || base64;  
-        fd.set('photoLink', clean);                    // send base64 string in "photoLink"
+        fd.set('photoLink', clean);                  
       } else {
         fd.delete('photoLink');
       }
   
       const res = await fetch(scriptURL, { method: 'POST', body: fd });
       if (res.ok) {
-        window.location.href = "thankyou.html";  // 👈 redirect to thankyou page
+        window.location.href = "thankyou.html"; 
       } else {
         alert("Something went wrong. Please try again.");
       }
