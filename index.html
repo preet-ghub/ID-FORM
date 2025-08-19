@@ -77,9 +77,11 @@
       }
   
       const res = await fetch(scriptURL, { method: 'POST', body: fd });
-      const text = await res.text();
-      alert(text);
-      form.reset();
+      if (res.ok) {
+        window.location.href = "thankyou.html";  // 👈 redirect to thankyou page
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
     });
   
     function fileToBase64(file) {
