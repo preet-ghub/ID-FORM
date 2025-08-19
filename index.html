@@ -49,50 +49,76 @@
     
   </form>
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzthwWf8BfJQldDP9nj88-05Tnikx7l4E3JejdTa5Aqyjvj5F22FO3v0jMuNn3dUeEwTw/exec"; 
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzthwWf8BfJQldDP9nj88-05Tnikx7l4E3JejdTa5Aqyjvj5F22FO3v0jMuNn3dUeEwTw/exec"; 
   
-    document.getElementById('myForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const fd = new FormData(form);
-  
-     
-      const dob = fd.get("dob");
-      if (dob) {
-        const [year, month, day] = dob.split("-");
-        const formattedDOB = `${day}-${month}-${year}`;  
-        fd.set("dob", formattedDOB);
-      }
-  
-     
-      const fileInput = document.getElementById('photo');
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const base64 = await fileToBase64(file);       
-        const clean = base64.split(',')[1] || base64;  
-        fd.set('photoLink', clean);                  
-      } else {
-        fd.delete('photoLink');
-      }
-  
+  const form = document.getElementById('myForm');
+  const submitBtn = form.querySelector("button[type='submit']"); 
+  let alreadySubmitted = false; 
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    
+    if (alreadySubmitted) {
+      return; 
+    }
+    alreadySubmitted = true;
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+
+    const fd = new FormData(form);
+
+    
+    const dob = fd.get("dob");
+    if (dob) {
+      const [year, month, day] = dob.split("-");
+      const formattedDOB = `${day}-${month}-${year}`;
+      fd.set("dob", formattedDOB);
+    }
+
+    
+    const fileInput = document.getElementById('photo');
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const base64 = await fileToBase64(file);
+      const clean = base64.split(',')[1] || base64;
+      fd.set('photoLink', clean);
+    } else {
+      fd.delete('photoLink');
+    }
+
+    try {
       const res = await fetch(scriptURL, { method: 'POST', body: fd });
       if (res.ok) {
         window.location.href = "thankyou.html"; 
       } else {
         alert("Something went wrong. Please try again.");
+        resetSubmit(); 
       }
-    });
-  
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+    } catch (err) {
+      alert("Network error. Please try again.");
+      resetSubmit();
     }
-  </script>
+  });
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ✅ helper to reset button if needed
+  function resetSubmit() {
+    alreadySubmitted = false;
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit";
+  }
+</script>
+
   
   
    
