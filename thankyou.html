@@ -77,12 +77,13 @@
     <p>Your information has been successfully submitted.</p>
     <p>We truly appreciate your response 💙</p>
   </div>
-
   <script>
-  history.pushState(null, null, location.href);
-  window.onpopstate = function () {
-    history.go(1);
-  };
-</script>
+   history.pushState(null, null, location.href);
+   window.onpopstate = function () {
+    window.location.href = "index.html"; // redirect to fresh form
+   };
+ </script>
+
+ 
 </body>
 </html>
